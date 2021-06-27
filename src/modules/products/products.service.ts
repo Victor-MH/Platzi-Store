@@ -23,8 +23,9 @@ export class ProductsService {
     }
 
     create(payload: any) {
+        const newId = (this.counterId += 1);
         const newProduct = {
-            id: this.counterId++,
+            id: newId,
             ...payload,
         };
         this.products.push(newProduct);
@@ -32,21 +33,34 @@ export class ProductsService {
     }
 
     update(id: number, payload: any) {
-        const updatedProduct = {
-            id,
-            ...payload,
-        };
-        const productIndex = this.products.findIndex((item) => item.id === id);
+        // const updatedProduct = {
+        //     id,
+        //     ...payload,
+        // };
+        // const productIndex = this.products.findIndex((item) => item.id === id);
 
-        if (productIndex > -1) {
-            this.products[productIndex] = updatedProduct;
-            return {
-                message: 'Product updated successfuly',
-                product: updatedProduct,
-            };
-        } else {
-            return { message: 'Product not found' };
+        // if (productIndex > -1) {
+        //     this.products[productIndex] = updatedProduct;
+        //     return {
+        //         message: 'Product updated successfuly',
+        //         product: updatedProduct,
+        //     };
+        // } else {
+        //     return { message: 'Product not found' };
+        // }
+
+        // Como lo haría un google expert
+        const product = this.findOne(id);
+        if (product) {
+            const index = this.products.findIndex((item) => item.id === id);
+            this.products[index] = {
+                ...product,
+                ...payload,
+            }; //hace un merge entre el producto anterior y actualiza al final con los atributos del payload
+            return this.products[index];
         }
+
+        return null;
     }
 
     delete(id: number) {

@@ -14,6 +14,8 @@ import {
 
 import { Response } from 'express';
 
+import { ProductsService } from './products.service';
+
 @Controller('products') //Nos evita escribir products como base en cada endpoint
 export class ProductsController {
     //Lo tomaría como un id para la ruta pruducts/:id
@@ -26,6 +28,10 @@ export class ProductsController {
     //         message: `New products everyday`,
     //     };
     // }
+    //Comentado porque choca con la ruta de query
+
+    //con solo decirle de qué tipo es, nest ya sabe que tiene que crear la instancia del servicio
+    constructor(private productsService: ProductsService) {}
 
     @Get('filter')
     getProductFilter() {
@@ -36,10 +42,12 @@ export class ProductsController {
 
     @Get(':id')
     @HttpCode(HttpStatus.ACCEPTED) //Definir un httpcode personalizado
-    getProduct(@Res() response: Response, @Param() params: any) {
-        response.status(200).send({
-            message: `product ${params.id}`,
-        });
+    // getProduct(@Res() response: Response) al usar res le quitas a nest la posibilidad de resolver usando solo return
+    getProduct(@Param('id') id: number) {
+        // response.status(200).send({
+        //     message: `product ${params.id}`,
+        // });
+        return this.productsService.findOne(+id); //con el + lo convierte a número
     }
 
     @Get('products2/:productId') //Definir el nombre del atributo que vamos a recibir
@@ -57,12 +65,13 @@ export class ProductsController {
         //products?limit=5&offset=9&brand=addidas
     ) {
         // const { limit, offset } = params;
-        return {
-            message: `Product from brand ${brand} with limit=${limit}, offset=${offset}`,
-            limit,
-            offset,
-            brand,
-        };
+        // return {
+        //     message: `Product from brand ${brand} with limit=${limit}, offset=${offset}`,
+        //     limit,
+        //     offset,
+        //     brand,
+        // };
+        return this.productsService.findAll();
     }
 
     //Se puede especificar cada elemento del body, pero siendo que puede
@@ -70,21 +79,25 @@ export class ProductsController {
     //@Body('name') name: string, @Body('price') price: string (JAMAS ENVIES PRICE DESDE CLIENTEEEE)
     @Post()
     createProduct(@Body() payload: any) {
-        return {
-            message: 'Acción de crear',
-            payload,
-        };
+        // return {
+        //     message: 'Acción de crear',
+        //     payload,
+        // };
+
+        return this.productsService.create(payload);
     }
 
     //Patch se usa para actualizar parcialmente, pero generalmente
     //se usa put para actualizar completa o parcialmente
     @Put(':id')
     updateProduct(@Param('id') id: number, @Body() payload: any) {
-        return {
-            id,
-            message: `Product with id ${id} has been updated`,
-            payload,
-        };
+        // return {
+        //     id,
+        //     message: `Product with id ${id} has been updated`,
+        //     payload,
+        // };
+
+        return this.productsService.update(+id, payload);
     }
 
     @Delete(':id')
