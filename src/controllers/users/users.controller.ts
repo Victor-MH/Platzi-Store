@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 @Controller('users')
 export class UsersController {
@@ -10,5 +10,13 @@ export class UsersController {
     @Get(':id')
     getUser(@Param('id') id: number) {
         return `User number ${id}`;
+    }
+
+    @Post()
+    createUser(@Body() payload: any) {
+        return {
+            message: 'New user created',
+            payload,
+        };
     }
 }
