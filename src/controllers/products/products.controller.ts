@@ -7,7 +7,12 @@ import {
     Body,
     Put,
     Delete,
+    HttpStatus,
+    HttpCode,
+    Res,
 } from '@nestjs/common';
+
+import { Response } from 'express';
 
 @Controller('products') //Nos evita escribir products como base en cada endpoint
 export class ProductsController {
@@ -30,10 +35,11 @@ export class ProductsController {
     }
 
     @Get(':id')
-    getProduct(@Param() params: any) {
-        return {
+    @HttpCode(HttpStatus.ACCEPTED) //Definir un httpcode personalizado
+    getProduct(@Res() response: Response, @Param() params: any) {
+        response.status(200).send({
             message: `product ${params.id}`,
-        };
+        });
     }
 
     @Get('products2/:productId') //Definir el nombre del atributo que vamos a recibir
