@@ -10,6 +10,7 @@ import {
     HttpStatus,
     HttpCode,
     Res,
+    ParseIntPipe,
 } from '@nestjs/common';
 
 import { Response } from 'express';
@@ -43,11 +44,13 @@ export class ProductsController {
     @Get(':id')
     @HttpCode(HttpStatus.ACCEPTED) //Definir un httpcode personalizado
     // getProduct(@Res() response: Response) al usar res le quitas a nest la posibilidad de resolver usando solo return
-    getProduct(@Param('id') id: number) {
+    getProduct(@Param('id', ParseIntPipe) id: number) {
+        //El pipe nos asegura que va a ser un número al final
+
         // response.status(200).send({
         //     message: `product ${params.id}`,
         // });
-        return this.productsService.findOne(+id); //con el + lo convierte a número
+        return this.productsService.findOne(id); //con el + lo convierte a número
     }
 
     @Get('products2/:productId') //Definir el nombre del atributo que vamos a recibir
@@ -90,7 +93,7 @@ export class ProductsController {
     //Patch se usa para actualizar parcialmente, pero generalmente
     //se usa put para actualizar completa o parcialmente
     @Put(':id')
-    updateProduct(@Param('id') id: number, @Body() payload: any) {
+    updateProduct(@Param('id', ParseIntPipe) id: number, @Body() payload: any) {
         // return {
         //     id,
         //     message: `Product with id ${id} has been updated`,
@@ -101,7 +104,7 @@ export class ProductsController {
     }
 
     @Delete(':id')
-    deleteProduct(@Param('id') id: number) {
+    deleteProduct(@Param('id', ParseIntPipe) id: number) {
         return {
             id,
             message: `Product with id ${id} has been deleted`,
