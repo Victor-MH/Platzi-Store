@@ -1,4 +1,13 @@
-import { Controller, Get, Param, Post, Query, Body } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Param,
+    Post,
+    Query,
+    Body,
+    Put,
+    Delete,
+} from '@nestjs/common';
 
 @Controller('products') //Nos evita escribir products como base en cada endpoint
 export class ProductsController {
@@ -58,6 +67,25 @@ export class ProductsController {
         return {
             message: 'Acción de crear',
             payload,
+        };
+    }
+
+    //Patch se usa para actualizar parcialmente, pero generalmente
+    //se usa put para actualizar completa o parcialmente
+    @Put(':id')
+    updateProduct(@Param('id') id: number, @Body() payload: any) {
+        return {
+            id,
+            message: `Product with id ${id} has been updated`,
+            payload,
+        };
+    }
+
+    @Delete(':id')
+    deleteProduct(@Param('id') id: number) {
+        return {
+            id,
+            message: `Product with id ${id} has been deleted`,
         };
     }
 }
