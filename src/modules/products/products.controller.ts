@@ -17,6 +17,7 @@ import { Response } from 'express';
 import { ParseIntPipe } from '../../common/parse-int.pipe';
 
 import { ProductsService } from './products.service';
+import { CreateProductDto, UpdateProductDto } from './products.dtos';
 
 @Controller('products') //Nos evita escribir products como base en cada endpoint
 export class ProductsController {
@@ -82,7 +83,7 @@ export class ProductsController {
     //haber muchos deja de ser conveniente
     //@Body('name') name: string, @Body('price') price: string (JAMAS ENVIES PRICE DESDE CLIENTEEEE)
     @Post()
-    createProduct(@Body() payload: any) {
+    createProduct(@Body() payload: CreateProductDto) {
         // return {
         //     message: 'Acción de crear',
         //     payload,
@@ -94,7 +95,10 @@ export class ProductsController {
     //Patch se usa para actualizar parcialmente, pero generalmente
     //se usa put para actualizar completa o parcialmente
     @Put(':id')
-    updateProduct(@Param('id', ParseIntPipe) id: number, @Body() payload: any) {
+    updateProduct(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() payload: UpdateProductDto,
+    ) {
         // return {
         //     id,
         //     message: `Product with id ${id} has been updated`,
