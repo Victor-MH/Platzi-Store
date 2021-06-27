@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product } from './product.entity';
 @Injectable()
 export class ProductsService {
@@ -19,7 +19,11 @@ export class ProductsService {
     }
 
     findOne(id: number) {
-        return this.products.find((item) => item.id === id);
+        const product = this.products.find((item) => item.id === id);
+        if (!product) {
+            throw new NotFoundException(`Product #${id} not found`);
+        }
+        return product;
     }
 
     create(payload: any) {
@@ -64,17 +68,25 @@ export class ProductsService {
     }
 
     delete(id: number) {
-        const productIndex = this.products.findIndex((item) => item.id === id);
+        // const productIndex = this.products.findIndex((item) => item.id === id);
 
-        if (productIndex > -1) {
-            const deletedProduct = this.products.splice(productIndex, 1);
+        // if (productIndex > -1) {
+        //     const deletedProduct = this.products.splice(productIndex, 1);
 
-            return {
-                message: 'Product deleted successfuly',
-                deletedProduct,
-            };
-        } else {
-            return { message: 'Product not found' };
+        //     return {
+        //         message: 'Product deleted successfuly',
+        //         deletedProduct,
+        //     };
+        // } else {
+        //     return { message: 'Product not found' };
+        // }
+
+        //Como lo haría un google expert
+        const index = this.products.findIndex((item) => item.id === id);
+        if (index === -1) {
+            throw new NotFoundException(`Product #${id} not found`);
         }
+
+        return this.products[index];
     }
 }
