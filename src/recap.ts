@@ -1,29 +1,17 @@
-const myName = 'Victor';
-const myAge = 20;
+const myName = 'Nicolas';
+const myAge = 12;
 const suma = (a: number, b: number) => {
-    return a + b;
+  return a + b;
 };
-
-suma(12, 12);
+suma(12, 23);
 
 class Persona {
-    // private age; //Por defecto son public
-    // name;
+  constructor(private age: number, private name: string) {}
 
-    // constructor(age: number, name: string) {
-    //     this.age = age;
-    //     this.name = name;
-    // }
-
-    //Atajo para lo de arriba
-    constructor(private age: number, private name: string) {}
-
-    getSummary() {
-        return `My name is ${this.name} and I'm ${this.age} years old`;
-    }
+  getSummary() {
+    return `my name is ${this.name}, ${this.age}`;
+  }
 }
 
-const vico = new Persona(20, 'Victor');
-vico.getSummary();
-console.log(myName);
-console.log(myAge);
+const nicolas = new Persona(15, 'nicolas');
+nicolas.getSummary();
